@@ -10,8 +10,16 @@ A frontend project built as part of the FlyRank AI Internship — Frontend AI En
 - Tailwind CSS
 - Claude Code / Cursor for AI-assisted development
 
-## Setup
-Instructions coming soon as the project develops.
+## Getting Started
+
+**Prerequisites:** [Node.js](https://nodejs.org/) (LTS) and Git.
+
+```bash
+git clone https://github.com/<your-username>/flyrank-capstone.git
+cd flyrank-capstone
+```
+
+Setup and run commands will be added here once the framework choice (React vs. plain HTML/CSS/JS) is finalized. Until then, see [CLAUDE.md](./CLAUDE.md) for project conventions (Conventional Commits, 2-space indent).
 
 ## About
 This repo documents the AI-assisted development process, including prompts used, decisions made, and testing steps, as required by the FlyRank internship track.
