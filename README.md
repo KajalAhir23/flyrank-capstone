@@ -15,7 +15,7 @@ A frontend project built as part of the FlyRank AI Internship — Frontend AI En
 **Prerequisites:** [Node.js](https://nodejs.org/) (LTS) and Git.
 
 ```bash
-git clone https://github.com/<your-username>/flyrank-capstone.git
+git clone https://github.com/KajalAhir23/flyrank-capstone
 cd flyrank-capstone
 ```
 
