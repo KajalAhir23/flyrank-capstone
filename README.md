@@ -6,8 +6,9 @@ A frontend project built as part of the FlyRank AI Internship — Frontend AI En
 🚧 In progress
 
 ## Tech Stack
-- [To be decided: React / plain HTML-CSS-JS]
+- React + TypeScript (Vite)
 - Tailwind CSS
+- React Hook Form + Zod (form validation)
 - Claude Code / Cursor for AI-assisted development
 
 ## Getting Started
@@ -17,9 +18,11 @@ A frontend project built as part of the FlyRank AI Internship — Frontend AI En
 ```bash
 git clone https://github.com/<your-username>/flyrank-capstone.git
 cd flyrank-capstone
+npm install
+npm run dev
 ```
 
-Setup and run commands will be added here once the framework choice (React vs. plain HTML/CSS/JS) is finalized. Until then, see [CLAUDE.md](./CLAUDE.md) for project conventions (Conventional Commits, 2-space indent).
+Open [http://localhost:5173/settings](http://localhost:5173/settings) to use the settings form.
 
 ## About
 This repo documents the AI-assisted development process, including prompts used, decisions made, and testing steps, as required by the FlyRank internship track.
