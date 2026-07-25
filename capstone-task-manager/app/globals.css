@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --foreground: #0f172a;
+  --muted: #475569;
+  --border: #e2e8f0;
+  --accent: #2563eb;
+  --accent-soft: #eff6ff;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--foreground);
+}
