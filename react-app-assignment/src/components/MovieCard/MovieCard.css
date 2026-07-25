@@ -1,0 +1,90 @@
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  padding: 1.5rem;
+}
+
+.movie-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f7f7fb 100%);
+  box-shadow: 0 10px 30px rgba(16, 24, 40, 0.12);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.movie-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(16, 24, 40, 0.18);
+}
+
+.movie-card__poster {
+  aspect-ratio: 2 / 3;
+  width: 100%;
+  object-fit: cover;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.movie-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem 1rem 1.1rem;
+}
+
+.movie-card__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #111827;
+}
+
+.movie-card__meta {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.movie-card__favorite {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 0.8rem;
+  background: rgba(255, 255, 255, 0.92);
+  color: #1f2937;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.15);
+  backdrop-filter: blur(4px);
+  transition: transform 0.2s ease;
+}
+
+.movie-card__favorite:hover {
+  transform: scale(1.04);
+}
+
+.movie-card__favorite:focus-visible {
+  outline: 2px solid #e50914;
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .movie-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+  }
+}

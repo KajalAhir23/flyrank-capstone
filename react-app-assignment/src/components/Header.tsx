@@ -1,25 +1,29 @@
-import { useRef } from 'react'
+import { useRef, type KeyboardEvent } from 'react'
 import { NavLink } from 'react-router-dom'
-import { searchMovies } from '../services/omdbMovieService'
+import type { User } from 'firebase/auth'
 import './Header.css'
 
-function Header() {
+interface HeaderProps {
+  query: string
+  setQuery: (value: string) => void
+  onSearch: (nextQuery?: string) => Promise<void>
+  user: User | null
+  onLogout: () => Promise<void>
+}
+
+function Header({ query, setQuery, onSearch, user, onLogout }: HeaderProps) {
   const searchInputRef = useRef<HTMLInputElement>(null)
 
-  const handleSearch = async () => {
-    const query = searchInputRef.current?.value.trim() ?? ''
-    console.log('[Header] Search clicked, query:', query)
+  const handleSearch = () => {
+    const nextQuery = searchInputRef.current?.value.trim() ?? ''
+    setQuery(nextQuery)
+    void onSearch(nextQuery)
+  }
 
-    if (!query) {
-      console.warn('[Header] Empty search query')
-      return
-    }
-
-    try {
-      const movies = await searchMovies(query)
-      console.log('[Header] Search succeeded:', movies)
-    } catch (error) {
-      console.error('[Header] Search failed:', error)
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      handleSearch()
     }
   }
 
@@ -51,6 +55,9 @@ function Header() {
           type="search"
           placeholder="Search movies..."
           aria-label="Search movies"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          onKeyDown={handleKeyDown}
         />
         <button
           className="header__search-button"
@@ -60,6 +67,18 @@ function Header() {
           Search
         </button>
       </div>
+
+      {user && (
+        <div className="header__actions">
+          <button
+            className="header__logout-button"
+            type="button"
+            onClick={() => void onLogout()}
+          >
+            Logout
+          </button>
+        </div>
+      )}
     </header>
   )
 }
