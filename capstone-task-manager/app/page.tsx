@@ -1,12 +1,27 @@
-import Link from "next/link";
+"use client";
 
-const statCards = [
-  { label: "Total Tasks", value: "0" },
-  { label: "Completed", value: "0" },
-  { label: "Pending", value: "0" },
-];
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getTasks, subscribeToTasks, type Task } from "@/lib/tasks";
 
 export default function DashboardPage() {
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  useEffect(() => {
+    setTasks(getTasks());
+    const unsubscribe = subscribeToTasks(() => setTasks(getTasks()));
+    return unsubscribe;
+  }, []);
+
+  const completedCount = tasks.filter((t) => t.completed).length;
+  const pendingCount = tasks.length - completedCount;
+
+  const statCards = [
+    { label: "Total Tasks", value: String(tasks.length) },
+    { label: "Completed", value: String(completedCount) },
+    { label: "Pending", value: String(pendingCount) },
+  ];
+
   return (
     <section className="mx-auto flex w-full max-w-5xl flex-col rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm shadow-slate-200/70 sm:p-8 lg:p-10">
       <div className="space-y-3">
@@ -17,7 +32,8 @@ export default function DashboardPage() {
           Dashboard
         </h1>
         <p className="max-w-2xl text-base leading-7 text-[var(--muted)] sm:text-lg">
-          Welcome to your task workspace. This placeholder view will soon show key task insights.
+          Welcome to your task workspace. Chat with the AI assistant to turn
+          your goals into tasks, or manage them directly below.
         </p>
       </div>
 

@@ -16,6 +16,15 @@
   --space-lg: 1.5rem;
   --space-xl: 2rem;
 }
+:root.dark {
+  --background: #0f172a;
+  --surface: #1e293b;
+  --foreground: #f1f5f9;
+  --muted: #94a3b8;
+  --border: #334155;
+  --accent: #3b82f6;
+  --accent-soft: #1e3a5f;
+}
 
 @theme inline {
   --color-background: var(--background);
@@ -320,6 +329,46 @@ body {
 .chat-stop-button {
   background: #ef4444;
   color: white;
+}
+
+.chat-task-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0.4rem 0 0 2.25rem;
+}
+
+.chat-task-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--border);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  max-width: fit-content;
+}
+
+.chat-task-button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.chat-task-button-label {
+  font-weight: 400;
+  color: var(--foreground);
+}
+
+.chat-task-button-added {
+  border-style: solid;
+  border-color: #16a34a;
+  background: #f0fdf4;
+  color: #16a34a;
+  cursor: default;
 }
 
 @media (max-width: 480px) {
