@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const statCards = [
   { label: "Total Tasks", value: "0" },
   { label: "Completed", value: "0" },
@@ -30,6 +32,13 @@ export default function DashboardPage() {
           </div>
         ))}
       </div>
+
+      <Link
+        href="/chat"
+        className="mt-8 inline-flex w-fit items-center gap-2 rounded-[var(--radius-md)] bg-[var(--accent)] px-5 py-3 font-medium text-white transition-opacity hover:opacity-90"
+      >
+        💬 Chat with AI Assistant
+      </Link>
     </section>
   );
 }
