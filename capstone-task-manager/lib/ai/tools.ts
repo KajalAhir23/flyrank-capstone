@@ -94,3 +94,15 @@ export const scoreTaskPriority = tool({
         };
     },
 });
+export const confirmAddTask = tool({
+  description:
+    "Ask the user to confirm before adding a specific task to their task " +
+    "list. Call this right after scoring a task as high urgency, to check " +
+    "if the user wants it added to their tasks now. Do not call this for " +
+    "low or medium urgency tasks unless the user explicitly asks to add them.",
+  inputSchema: z.object({
+    title: z.string().describe("The exact task title to potentially add."),
+  }),
+  // No execute function — this is a client-side, user-interaction tool.
+  // The UI collects the user's Yes/No answer and reports it back.
+});

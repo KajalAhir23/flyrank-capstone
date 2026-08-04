@@ -13,7 +13,7 @@ function extractTaskLines(text: string): string[] {
     .filter(Boolean);
 }
 
-// ---- Priority score card (the real rendered component for tool output) ----
+// ---- Priority score card ----
 
 interface ScoreResult {
   title: string;
@@ -58,9 +58,9 @@ function PriorityScoreCard({ result }: { result: ScoreResult }) {
   );
 }
 
-// ---- Tool part renderer: handles all 4 lifecycle states ----
+// ---- Server tool renderer (scoreTaskPriority) ----
 
-function ToolPart({ part }: { part: any }) {
+function ScoreToolPart({ part }: { part: any }) {
   const state = part.state;
 
   if (state === "input-streaming") {
@@ -101,8 +101,75 @@ function ToolPart({ part }: { part: any }) {
   return null;
 }
 
+// ---- Client interactive tool renderer (confirmAddTask) ----
+
+function ConfirmToolPart({
+  part,
+  onAnswer,
+}: {
+  part: any;
+  onAnswer: (toolCallId: string, title: string, confirmed: boolean) => void;
+}) {
+  const state = part.state;
+
+  if (state === "input-streaming") {
+    return (
+      <div className="tool-card tool-card-loading">
+        <div className="tool-card-spinner" />
+        <p>Preparing a confirmation…</p>
+      </div>
+    );
+  }
+
+  if (state === "input-available") {
+    const title = part.input?.title ?? "this task";
+    return (
+      <div className="tool-card tool-card-confirm">
+        <p className="tool-card-confirm-text">
+          Add <strong>{title}</strong> to your tasks now?
+        </p>
+        <div className="tool-card-confirm-actions">
+          <button
+            type="button"
+            className="tool-confirm-yes"
+            onClick={() => onAnswer(part.toolCallId, title, true)}
+          >
+            Yes, add it
+          </button>
+          <button
+            type="button"
+            className="tool-confirm-no"
+            onClick={() => onAnswer(part.toolCallId, title, false)}
+          >
+            No thanks
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (state === "output-available") {
+    const confirmed = (part.output as { confirmed: boolean })?.confirmed;
+    return (
+      <div className={`tool-card ${confirmed ? "tool-card-result" : "tool-card-loading"}`}>
+        <p>{confirmed ? "✓ Added to your tasks." : "Skipped — not added."}</p>
+      </div>
+    );
+  }
+
+  if (state === "output-error") {
+    return (
+      <div className="tool-card tool-card-error">
+        <p className="tool-card-error-title">⚠ Couldn't process that</p>
+      </div>
+    );
+  }
+
+  return null;
+}
+
 export function Chat() {
-  const { messages, sendMessage, status, stop } = useChat();
+  const { messages, sendMessage, status, stop, addToolOutput } = useChat();
   const [input, setInput] = useState("");
   const [addedTasks, setAddedTasks] = useState<Set<string>>(new Set());
 
@@ -146,6 +213,21 @@ export function Chat() {
     setAddedTasks((prev) => new Set(prev).add(key));
   }
 
+  function handleConfirmAnswer(
+    toolCallId: string,
+    title: string,
+    confirmed: boolean
+  ) {
+    if (confirmed) {
+      addTask(title);
+    }
+    addToolOutput({
+      toolCallId,
+      tool: "confirmAddTask",
+      output: { confirmed },
+    });
+  }
+
   return (
     <div className="chat-page">
       <div className="chat-container">
@@ -169,7 +251,7 @@ export function Chat() {
               <div className="chat-empty-icon">✦</div>
               <p className="chat-empty-title">What are you working on?</p>
               <p className="chat-empty-subtitle">
-                Try: "How urgent is replying to my landlord's email?"
+                Try: "How urgent is replying to my landlord's email today?"
               </p>
             </div>
           )}
@@ -205,7 +287,16 @@ export function Chat() {
                         );
                       }
                       if (part.type === "tool-scoreTaskPriority") {
-                        return <ToolPart key={i} part={part} />;
+                        return <ScoreToolPart key={i} part={part} />;
+                      }
+                      if (part.type === "tool-confirmAddTask") {
+                        return (
+                          <ConfirmToolPart
+                            key={i}
+                            part={part}
+                            onAnswer={handleConfirmAnswer}
+                          />
+                        );
                       }
                       return null;
                     })}

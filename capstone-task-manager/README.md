@@ -84,3 +84,32 @@ keyword analysis run server-side — not a number invented by the model.
 - `output-available` — Priority Score Card: colored urgency dot, score
   ring, category, time estimate, reasoning
 - `output-error` — red-bordered error card, no crash
+
+### `confirmAddTask`
+
+Defined in `lib/ai/tools.ts`, registered in `app/api/chat/route.ts`.
+
+A client-side, user-interaction tool (no `execute` function) — the model
+calls it, but the UI collects the actual answer. Used right after scoring
+a task as HIGH urgency, to confirm before adding it to the task list.
+
+**Input schema:**
+```ts
+{
+  title: string;   // the exact task title to potentially add
+}
+```
+
+**Return shape (provided by the client via `addToolOutput`):**
+```ts
+{
+  confirmed: boolean;
+}
+```
+
+**UI states rendered** (`components/Chat.tsx`, `ConfirmToolPart` component):
+- `input-available` — "Add [title] to your tasks now?" with Yes/No buttons
+- `output-available` — "✓ Added to your tasks" or "Skipped — not added"
+
+Requires `stopWhen: stepCountIs(5)` in the route handler so the model can
+chain from `scoreTaskPriority` into `confirmAddTask` in the same turn.

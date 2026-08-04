@@ -524,3 +524,44 @@ body {
   color: #b91c1c;
   font-size: 0.82rem;
 }
+
+.tool-card-confirm {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.tool-card-confirm-text {
+  margin: 0 0 0.7rem;
+  color: var(--foreground);
+}
+
+.tool-card-confirm-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tool-confirm-yes,
+.tool-confirm-no {
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.tool-confirm-yes {
+  background: var(--accent);
+  color: white;
+}
+
+.tool-confirm-no {
+  background: var(--surface);
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+.tool-confirm-yes:hover,
+.tool-confirm-no:hover {
+  opacity: 0.85;
+}
