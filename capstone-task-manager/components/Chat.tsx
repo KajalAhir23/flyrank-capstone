@@ -4,9 +4,6 @@ import { useChat } from "@ai-sdk/react";
 import { useEffect, useRef, useState } from "react";
 import { addTask } from "@/lib/tasks";
 
-// Pulls out lines that look like list items (numbered or bulleted)
-// from a block of assistant text, so we can offer "add to tasks"
-// buttons under each one.
 function extractTaskLines(text: string): string[] {
   return text
     .split("\n")
@@ -14,6 +11,94 @@ function extractTaskLines(text: string): string[] {
     .filter((line) => /^(\d+[.)]|[-*•])\s+/.test(line))
     .map((line) => line.replace(/^(\d+[.)]|[-*•])\s+/, "").trim())
     .filter(Boolean);
+}
+
+// ---- Priority score card (the real rendered component for tool output) ----
+
+interface ScoreResult {
+  title: string;
+  urgency: "low" | "medium" | "high";
+  score: number;
+  estimatedMinutes: number;
+  category: string;
+  reasoning: string;
+}
+
+function urgencyColor(urgency: string) {
+  if (urgency === "high") return "#ef4444";
+  if (urgency === "medium") return "#f59e0b";
+  return "#22c55e";
+}
+
+function PriorityScoreCard({ result }: { result: ScoreResult }) {
+  return (
+    <div className="tool-card tool-card-result">
+      <div className="tool-card-header">
+        <span
+          className="tool-card-dot"
+          style={{ background: urgencyColor(result.urgency) }}
+        />
+        <p className="tool-card-title">{result.title}</p>
+      </div>
+
+      <div className="tool-card-score-row">
+        <div className="tool-card-score-ring">
+          <span>{result.score}</span>
+        </div>
+        <div className="tool-card-meta">
+          <p>
+            <strong>{result.urgency}</strong> urgency
+          </p>
+          <p>~{result.estimatedMinutes} min · {result.category}</p>
+        </div>
+      </div>
+
+      <p className="tool-card-reasoning">{result.reasoning}</p>
+    </div>
+  );
+}
+
+// ---- Tool part renderer: handles all 4 lifecycle states ----
+
+function ToolPart({ part }: { part: any }) {
+  const state = part.state;
+
+  if (state === "input-streaming") {
+    return (
+      <div className="tool-card tool-card-loading">
+        <div className="tool-card-spinner" />
+        <p>Preparing to score a task…</p>
+      </div>
+    );
+  }
+
+  if (state === "input-available") {
+    return (
+      <div className="tool-card tool-card-loading">
+        <div className="tool-card-spinner" />
+        <p>
+          Scoring <strong>{part.input?.title ?? "task"}</strong>…
+        </p>
+      </div>
+    );
+  }
+
+  if (state === "output-available") {
+    return <PriorityScoreCard result={part.output as ScoreResult} />;
+  }
+
+  if (state === "output-error") {
+    return (
+      <div className="tool-card tool-card-error">
+        <p className="tool-card-error-title">⚠ Couldn't score this task</p>
+        <p className="tool-card-error-detail">
+          {part.errorText || "Something went wrong running the tool."}
+        </p>
+      </div>
+    );
+  }
+
+  return null;
 }
 
 export function Chat() {
@@ -69,7 +154,7 @@ export function Chat() {
           <div>
             <p className="chat-header-title">Task Assistant</p>
             <p className="chat-header-subtitle">
-              Describe a goal and I'll break it into tasks
+              Describe a goal, or ask me to score a task's priority
             </p>
           </div>
         </div>
@@ -84,15 +169,13 @@ export function Chat() {
               <div className="chat-empty-icon">✦</div>
               <p className="chat-empty-title">What are you working on?</p>
               <p className="chat-empty-subtitle">
-                Try: "I'm moving apartments next month"
+                Try: "How urgent is replying to my landlord's email?"
               </p>
             </div>
           )}
 
           {messages.map((message, msgIndex) => {
             const isLastMessage = msgIndex === messages.length - 1;
-            // Only show "add to tasks" buttons once this message has
-            // finished streaming — not while text is still arriving.
             const showTaskButtons =
               message.role === "assistant" &&
               !(isLastMessage && isStreaming);
@@ -112,12 +195,20 @@ export function Chat() {
                   {message.role === "assistant" && (
                     <div className="chat-avatar chat-avatar-assistant">✦</div>
                   )}
-                  <div className="chat-bubble">
-                    {message.parts.map((part, i) =>
-                      part.type === "text" ? (
-                        <span key={i}>{part.text}</span>
-                      ) : null
-                    )}
+                  <div className="chat-bubble-wrap">
+                    {message.parts.map((part, i) => {
+                      if (part.type === "text") {
+                        return (
+                          <div key={i} className="chat-bubble">
+                            {part.text}
+                          </div>
+                        );
+                      }
+                      if (part.type === "tool-scoreTaskPriority") {
+                        return <ToolPart key={i} part={part} />;
+                      }
+                      return null;
+                    })}
                   </div>
                   {message.role === "user" && (
                     <div className="chat-avatar chat-avatar-user">You</div>
