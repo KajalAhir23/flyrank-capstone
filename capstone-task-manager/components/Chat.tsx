@@ -169,9 +169,19 @@ function ConfirmToolPart({
 }
 
 export function Chat() {
-  const { messages, sendMessage, status, stop, addToolOutput } = useChat();
+  const {
+    messages,
+    sendMessage,
+    status,
+    stop,
+    addToolOutput,
+    error,
+    regenerate,
+  } = useChat();
+
   const [input, setInput] = useState("");
   const [addedTasks, setAddedTasks] = useState<Set<string>>(new Set());
+  const [isRetrying, setIsRetrying] = useState(false);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isPinnedToBottomRef = useRef(true);
@@ -228,6 +238,13 @@ export function Chat() {
     });
   }
 
+  function handleRetry() {
+    if (isRetrying) return;
+    setIsRetrying(true);
+    regenerate();
+    setTimeout(() => setIsRetrying(false), 1000);
+  }
+
   return (
     <div className="chat-page">
       <div className="chat-container">
@@ -250,9 +267,23 @@ export function Chat() {
             <div className="chat-empty">
               <div className="chat-empty-icon">✦</div>
               <p className="chat-empty-title">What are you working on?</p>
-              <p className="chat-empty-subtitle">
-                Try: "How urgent is replying to my landlord's email today?"
-              </p>
+              <p className="chat-empty-subtitle">Try one of these:</p>
+              <div className="chat-empty-examples">
+                {[
+                  "I'm moving apartments next month",
+                  "How urgent is replying to my landlord's email today?",
+                  "Plan a birthday party for my friend",
+                ].map((example) => (
+                  <button
+                    key={example}
+                    type="button"
+                    className="chat-empty-example"
+                    onClick={() => setInput(example)}
+                  >
+                    {example}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
@@ -315,9 +346,8 @@ export function Chat() {
                         <button
                           key={key}
                           type="button"
-                          className={`chat-task-button ${
-                            added ? "chat-task-button-added" : ""
-                          }`}
+                          className={`chat-task-button ${added ? "chat-task-button-added" : ""
+                            }`}
                           onClick={() => handleAddTask(line, key)}
                           disabled={added}
                         >
@@ -341,6 +371,29 @@ export function Chat() {
                 <span className="chat-dot" />
                 <span className="chat-dot" />
                 <span className="chat-dot" />
+              </div>
+            </div>
+          )}
+
+          {error && (
+            <div className="chat-message chat-message-assistant">
+              <div className="chat-avatar chat-avatar-assistant">✦</div>
+              <div className="tool-card tool-card-error chat-error-card">
+                <p className="tool-card-error-title">
+                  ⚠ Message failed to send
+                </p>
+                <p className="tool-card-error-detail">
+                  {error.message ||
+                    "Something went wrong. Your other messages are safe."}
+                </p>
+                <button
+                  type="button"
+                  onClick={handleRetry}
+                  disabled={isRetrying}
+                  className="chat-retry-button"
+                >
+                  {isRetrying ? "Retrying…" : "Retry this message"}
+                </button>
               </div>
             </div>
           )}
