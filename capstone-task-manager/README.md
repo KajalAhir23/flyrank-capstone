@@ -113,3 +113,24 @@ a task as HIGH urgency, to confirm before adding it to the task list.
 
 Requires `stopWhen: stepCountIs(5)` in the route handler so the model can
 chain from `scoreTaskPriority` into `confirmAddTask` in the same turn.
+
+## Motion Button (FE-AA1)
+
+Demo: `/motion-button`
+
+A reusable animated button component (`components/MotionButton.tsx`) with
+a full state lifecycle: idle → hover/focus → loading → success/error →
+back to idle.
+
+**Duration & easing choices:**
+- Icon width/opacity/scale animate together at 260ms with a spring-like
+  `cubic-bezier(0.34, 1.56, 0.64, 1)`, so the spinner/checkmark feels like
+  it "arrives" rather than pops in.
+- Background color transitions at 220ms ease — deliberate but not sluggish.
+- Success draws an SVG checkmark stroke (320ms); error shakes once (380ms,
+  transform-only, never repeats).
+- Hover only animates `transform`/`box-shadow`, never causes layout shift.
+- Under `prefers-reduced-motion`, all durations collapse near-zero —
+  motion is removed, but color/icon state changes still communicate
+  (verified: button still switches to green "Sent" with checkmark
+  instantly instead of animating).

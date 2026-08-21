@@ -633,3 +633,166 @@ body {
   border-color: var(--accent);
   border-style: solid;
 }
+.mbtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  transform: translateY(0) scale(1);
+  transition:
+    background-color 220ms ease,
+    transform 150ms ease,
+    box-shadow 200ms ease;
+}
+
+/* Hover / focus */
+.mbtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.mbtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Active press */
+.mbtn:active:not(:disabled) {
+  transform: translateY(0) scale(0.97);
+  transition: transform 80ms ease;
+}
+
+/* Content row: icon + label, animated as a unit */
+.mbtn-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mbtn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0;
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    width 260ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 200ms ease,
+    transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.mbtn[data-state="loading"] .mbtn-icon,
+.mbtn[data-state="success"] .mbtn-icon,
+.mbtn[data-state="error"] .mbtn-icon {
+  width: 1rem;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.mbtn-label {
+  transition: opacity 180ms ease;
+}
+
+/* Loading state */
+.mbtn-spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: white;
+  animation: mbtn-spin 0.7s linear infinite;
+}
+
+@keyframes mbtn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mbtn[data-state="loading"] {
+  background: var(--accent);
+  cursor: wait;
+  opacity: 0.9;
+}
+
+/* Success state */
+.mbtn-check {
+  width: 14px;
+  height: 14px;
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: mbtn-check-draw 320ms ease forwards;
+}
+
+@keyframes mbtn-check-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.mbtn[data-state="success"] {
+  background: #16a34a;
+}
+
+/* Error state */
+.mbtn-x {
+  width: 14px;
+  height: 14px;
+}
+
+.mbtn[data-state="error"] {
+  background: #dc2626;
+  animation: mbtn-shake 380ms ease;
+}
+
+@keyframes mbtn-shake {
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+
+.mbtn:disabled {
+  cursor: not-allowed;
+}
+
+/* Reduced motion: keep feedback (color + icon swap), remove movement */
+@media (prefers-reduced-motion: reduce) {
+  .mbtn,
+  .mbtn-icon,
+  .mbtn-label,
+  .mbtn-check {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+  .mbtn:hover:not(:disabled),
+  .mbtn:active:not(:disabled) {
+    transform: none;
+  }
+  .mbtn[data-state="error"] {
+    animation: none;
+  }
+}
