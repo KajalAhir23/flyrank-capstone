@@ -65,15 +65,6 @@ export function ViewerRoot() {
           <span className="hud-eyebrow">FE-AA2</span>
           <h1>Turntable</h1>
         </div>
-        <label className="hud-upload">
-          <input
-            type="file"
-            accept=".glb"
-            onChange={(e) => handleFile(e.target.files?.[0])}
-            style={{ display: 'none' }}
-          />
-          Load .glb
-        </label>
       </header>
 
       <div
@@ -102,6 +93,16 @@ export function ViewerRoot() {
           <span>{fileName ?? 'DEFAULT SPECIMEN — drop a .glb to replace'}</span>
           {error && <span className="hud-error">{error}</span>}
         </div>
+
+        <label className="hud-upload">
+          <input
+            type="file"
+            accept=".glb"
+            onChange={(e) => handleFile(e.target.files?.[0])}
+            style={{ display: 'none' }}
+          />
+          Load .glb
+        </label>
       </div>
 
       <ConfiguratorChrome />
@@ -119,11 +120,9 @@ export function ViewerRoot() {
           position: absolute;
           top: 0;
           left: 0;
-          right: 0;
           z-index: 5;
           display: flex;
           align-items: center;
-          justify-content: space-between;
           padding: 18px 20px;
           pointer-events: none;
         }
@@ -145,6 +144,10 @@ export function ViewerRoot() {
           letter-spacing: -0.01em;
         }
         .hud-upload {
+          position: absolute;
+          right: 20px;
+          bottom: 16px;
+          z-index: 5;
           font-family: var(--font-mono);
           font-size: 11px;
           letter-spacing: 0.04em;
