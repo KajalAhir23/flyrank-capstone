@@ -76,4 +76,4 @@ npm run dev
 Deployed as its own Vercel project (separate from the capstone task manager),
 so its bundle and build settings don't interact with the main app:
 
-**Live URL:** _add your Vercel URL here after deploying_
+**Live URL:** https://flyrank-capstone-t4pa.vercel.app/
