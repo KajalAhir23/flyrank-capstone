@@ -7,6 +7,7 @@
   --muted: #475569;
   --border: #e2e8f0;
   --accent: #2563eb;
+  --accent-solid: #2563eb;
   --accent-soft: #eff6ff;
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
@@ -23,7 +24,8 @@
   --foreground: #f1f5f9;
   --muted: #94a3b8;
   --border: #334155;
-  --accent: #3b82f6;
+  --accent: #93c5fd;
+  --accent-solid: #1d4ed8;
   --accent-soft: #1e3a5f;
 }
 
@@ -34,6 +36,7 @@
   --color-muted: var(--muted);
   --color-border: var(--border);
   --color-accent: var(--accent);
+  --color-accent-solid: var(--accent-solid);
   --color-accent-soft: var(--accent-soft);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -63,7 +66,7 @@ body {
   gap: 0.5rem;
   margin-top: 1.5rem;
   padding: 0.75rem 1.25rem;
-  background: var(--accent);
+  background: var(--accent-solid);
   color: white;
   border-radius: var(--radius-md);
   text-decoration: none;
@@ -108,7 +111,7 @@ body {
   height: 36px;
   flex-shrink: 0;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--accent-solid);
   color: white;
   display: flex;
   align-items: center;
@@ -196,7 +199,7 @@ body {
 }
 
 .chat-avatar-assistant {
-  background: var(--accent);
+  background: var(--accent-solid);
   color: white;
 }
 
@@ -231,7 +234,7 @@ body {
 }
 
 .chat-message-user .chat-bubble {
-  background: var(--accent);
+  background: var(--accent-solid);
   color: white;
   border-bottom-right-radius: var(--radius-sm);
 }
@@ -337,7 +340,7 @@ body {
 }
 
 .chat-send-button {
-  background: var(--accent);
+  background: var(--accent-solid);
   color: white;
 }
 
@@ -569,7 +572,7 @@ body {
 }
 
 .tool-confirm-yes {
-  background: var(--accent);
+  background: var(--accent-solid);
   color: white;
 }
 
@@ -633,6 +636,7 @@ body {
   border-color: var(--accent);
   border-style: solid;
 }
+
 .mbtn {
   position: relative;
   display: inline-flex;
@@ -641,7 +645,7 @@ body {
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: var(--radius-md);
-  background: var(--accent);
+  background: var(--accent-solid);
   color: white;
   font-size: 0.95rem;
   font-weight: 600;
@@ -720,7 +724,7 @@ body {
 }
 
 .mbtn[data-state="loading"] {
-  background: var(--accent);
+  background: var(--accent-solid);
   cursor: wait;
   opacity: 0.9;
 }
@@ -756,19 +760,23 @@ body {
 }
 
 @keyframes mbtn-shake {
+
   10%,
   90% {
     transform: translateX(-1px);
   }
+
   20%,
   80% {
     transform: translateX(2px);
   }
+
   30%,
   50%,
   70% {
     transform: translateX(-4px);
   }
+
   40%,
   60% {
     transform: translateX(4px);
@@ -781,6 +789,7 @@ body {
 
 /* Reduced motion: keep feedback (color + icon swap), remove movement */
 @media (prefers-reduced-motion: reduce) {
+
   .mbtn,
   .mbtn-icon,
   .mbtn-label,
@@ -788,10 +797,12 @@ body {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
+
   .mbtn:hover:not(:disabled),
   .mbtn:active:not(:disabled) {
     transform: none;
   }
+
   .mbtn[data-state="error"] {
     animation: none;
   }
