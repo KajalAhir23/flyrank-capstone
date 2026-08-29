@@ -17,6 +17,8 @@ export function TopNav() {
       <nav className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6 lg:px-8">
         <Link
           href="/"
+          aria-hidden="true"
+          tabIndex={-1}
           className="rounded-full px-2 py-1 text-lg font-semibold tracking-tight text-[var(--foreground)] transition hover:text-[var(--accent)]"
         >
           TaskFlow
@@ -31,11 +33,10 @@ export function TopNav() {
                 key={href}
                 href={href}
                 aria-current={isActive ? "page" : undefined}
-                className={`rounded-full px-3 py-2 transition ${
-                  isActive
+                className={`rounded-full px-3 py-2 transition ${isActive
                     ? "bg-[var(--accent-soft)] text-[var(--accent)] shadow-sm"
                     : "hover:bg-[var(--accent-soft)] hover:text-[var(--accent)]"
-                }`}
+                  }`}
               >
                 {label}
               </Link>
