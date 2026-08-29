@@ -218,6 +218,10 @@ export function Chat() {
           className="chat-messages"
           ref={scrollContainerRef}
           onScroll={handleScroll}
+          role="log"
+          aria-live="polite"
+          aria-atomic="false"
+          aria-relevant="additions text"
         >
           {messages.length === 0 && (
             <div className="chat-empty">
@@ -302,9 +306,8 @@ export function Chat() {
                         <button
                           key={key}
                           type="button"
-                          className={`chat-task-button ${
-                            added ? "chat-task-button-added" : ""
-                          }`}
+                          className={`chat-task-button ${added ? "chat-task-button-added" : ""
+                            }`}
                           onClick={() => handleAddTask(line, key)}
                           disabled={added}
                         >
@@ -372,6 +375,7 @@ export function Chat() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Describe something you need to do…"
+            aria-label="Describe something you need to do"
             className="chat-input"
             disabled={isStreaming}
           />
@@ -396,6 +400,6 @@ export function Chat() {
           )}
         </form>
       </div>
-    </div>
+    </div >
   );
 }
