@@ -51,7 +51,7 @@ export default function DashboardPage() {
 
       <Link
         href="/chat"
-        className="mt-8 inline-flex w-fit items-center gap-2 rounded-[var(--radius-md)] bg-[var(--accent)] px-5 py-3 font-medium text-white transition-opacity hover:opacity-90"
+        className="mt-8 inline-flex w-fit items-center gap-2 rounded-[var(--radius-md)] bg-[var(--accent-solid)] px-5 py-3 font-medium text-white transition-opacity hover:opacity-90"
       >
         💬 Chat with AI Assistant
       </Link>
