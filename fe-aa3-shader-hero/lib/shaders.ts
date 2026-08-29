@@ -35,15 +35,16 @@ export const fragmentShaderSource = `
   // colors as "t" goes from 0 to 1. a = base, b = amplitude,
   // c = frequency, d = phase offset. Tuned by hand for an ink-black
   // -> copper -> antique-gold sweep instead of the usual rainbow.
-  // (a - b) is kept close to 0 rather than deeply negative, since any
-  // channel below 0 gets hard-clipped to pure black by the GPU —
-  // that clipping is what caused the very first version of this
-  // shader to render almost entirely black.
+  // The three channels share nearly the same phase (d is close
+  // together, not spread out) so the sweep always stays in the warm
+  // black/copper/gold family — spreading the phases further apart
+  // (the more "textbook" way to use this formula) let blue drift in
+  // at some values of t, which didn't fit the ink concept.
   vec3 palette(float t) {
-    vec3 a = vec3(0.16, 0.11, 0.075);
-    vec3 b = vec3(0.34, 0.24, 0.15);
+    vec3 a = vec3(0.14, 0.10, 0.07);
+    vec3 b = vec3(0.30, 0.20, 0.10);
     vec3 c = vec3(1.0, 1.0, 1.0);
-    vec3 d = vec3(0.10, 0.16, 0.28);
+    vec3 d = vec3(0.0, 0.05, 0.10);
     return a + b * cos(6.28318 * (c * t + d));
   }
 
@@ -106,11 +107,12 @@ export const fragmentShaderSource = `
 
     // Bend the sampling coordinate toward the mouse before warping,
     // like the ink field being tugged by a magnet under the canvas.
-    // Scaled by 1.6 so the noise shows real structure across the full
-    // frame instead of one soft blob (the field's natural "cell size"
-    // is about 1 unit, close to the size of the whole viewport in uv
-    // space, so without this the pattern barely varies at all).
-    vec2 p = (uv + normalize(toMouse + 0.0001) * pull) * 1.6;
+    // Scaled by 2.4 so the noise shows real structure across the full
+    // frame instead of one or two soft blobs (the field's natural
+    // "cell size" is about 1 unit, close to the size of the whole
+    // viewport in uv space, so without this the pattern barely varies
+    // across a wide hero at all).
+    vec2 p = (uv + normalize(toMouse + 0.0001) * pull) * 2.4;
 
     // ---- Domain warp (the technique that makes this look "liquid") ----
     // Layer 1: sample fbm at two offset points to build a 2D
@@ -150,9 +152,9 @@ export const fragmentShaderSource = `
     color *= mix(0.4, 1.0, vignette);
     color *= mix(1.0, 0.55, bottomShade);
 
-    // Brightness floor: guarantees there's always faint visible detail
+    // Brightness floor: guarantees there's always faint warm detail
     // rather than any region reading as flat, dead-black.
-    color = max(color, vec3(0.02, 0.017, 0.014));
+    color = max(color, vec3(0.035, 0.028, 0.02));
 
     // ---- Grain ----
     // A tiny amount of per-pixel noise breaks up color-banding on the
