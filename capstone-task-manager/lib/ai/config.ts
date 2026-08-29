@@ -8,8 +8,8 @@ import { groq } from "@ai-sdk/groq";
 
 // The model used for all chat completions in this app.
 // Llama 3.3 70B is a strong, fast, free-tier-friendly choice on Groq.
-export const chatModel = groq("llama-3.3-70b-versatile");
-
+// export const chatModel = groq("llama-3.3-70b-versatile");
+export const chatModel = groq("openai/gpt-oss-120b");
 // The assistant's persona and behavior. Edit this single string to
 // change how the assistant responds across the whole app.
 export const systemPrompt = `
