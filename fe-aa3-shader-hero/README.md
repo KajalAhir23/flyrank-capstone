@@ -6,7 +6,7 @@ ferrofluid reacting to a magnet. Built as a literal pun on "signature" — the
 shader itself is styled like flowing ink, with the name set in an italic
 serif over it.
 
-**Live URL:** _add your Vercel URL here after deploying_
+**Live URL:** https://flyrank-capstone-ify8.vercel.app/
 
 ## Reduced-motion / perf fallback (one-liner)
 
